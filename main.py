@@ -1,8 +1,8 @@
-from typing import Optional
 from fastapi import FastAPI, HTTPException
 from db import connection
 import uuid
 import hashlib
+import requests
 
 from input_types import InputCreateUser
 from output_types import OutputUser
@@ -49,3 +49,9 @@ async def delete_user(user_id: str):
         raise HTTPException(status_code=500, detail="Cannot delete user")
     else:
         return {'id': result[0]}
+
+@app.get("/cities/names")
+async def get_cities_names():
+    r = requests.get('https://kudago.com/public-api/v1.4/locations/?lang=&fields=&order_by=')
+    names = [city['name'] for city in r.json()]
+    return names
