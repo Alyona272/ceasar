@@ -3,12 +3,23 @@ from fastapi import FastAPI, HTTPException
 from db import connection
 import uuid
 import hashlib
+from fastapi.middleware.cors import CORSMiddleware
 
 from input_types import InputCreateUser
 from output_types import OutputUser
 
 app = FastAPI()
+origins = [
+    "http://localhost:5500",
+]
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/users/", status_code=201)
 async def create_user(request_body: InputCreateUser):
